@@ -1,0 +1,12 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "Apache License 2.0"
+
+[[mods]]
+modId = "fabric_networking_api_reforged"
+version = "${version}"
+displayName = "FabricNetworkingApiReforged"
+authors = "TeamPotato"
+description = '''
+A Minecraft mod.
+'''
