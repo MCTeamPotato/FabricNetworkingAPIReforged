@@ -16,26 +16,24 @@
 
 package net.fabricmc.networking.impl.networking.client;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import com.mojang.logging.LogUtils;
-import org.slf4j.Logger;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.networking.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.networking.impl.networking.AbstractChanneledNetworkAddon;
 import net.fabricmc.networking.impl.networking.ChannelInfoHolder;
 import net.fabricmc.networking.impl.networking.NetworkingImpl;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public final class ClientPlayNetworkAddon extends AbstractChanneledNetworkAddon<ClientPlayNetworking.PlayChannelHandler> {
 	private final ClientPlayNetworkHandler handler;
@@ -45,7 +43,7 @@ public final class ClientPlayNetworkAddon extends AbstractChanneledNetworkAddon<
 	private static final Logger LOGGER = LogUtils.getLogger();
 
 	public ClientPlayNetworkAddon(ClientPlayNetworkHandler handler, MinecraftClient client) {
-		super(ClientNetworkingImpl.PLAY, handler.getConnection(), "ClientPlayNetworkAddon for " + handler.getProfile().getName());
+		super(ClientNetworkingImpl.PLAY, handler.getConnection(), "ClientPlayNetworkAddon for " + (handler.getProfile() != null ? handler.getProfile().getName() : "(unknown)"));
 		this.handler = handler;
 		this.client = client;
 

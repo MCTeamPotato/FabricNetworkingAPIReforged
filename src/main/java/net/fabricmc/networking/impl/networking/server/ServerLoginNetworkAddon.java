@@ -16,30 +16,7 @@
 
 package net.fabricmc.networking.impl.networking.server;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
-
 import io.netty.util.concurrent.GenericFutureListener;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.PacketCallbacks;
-import net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket;
-import net.minecraft.network.packet.s2c.login.LoginCompressionS2CPacket;
-import net.minecraft.network.packet.s2c.login.LoginQueryRequestS2CPacket;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerLoginNetworkHandler;
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.networking.api.networking.v1.PacketByteBufs;
 import net.fabricmc.networking.api.networking.v1.PacketSender;
 import net.fabricmc.networking.api.networking.v1.ServerLoginConnectionEvents;
@@ -48,6 +25,23 @@ import net.fabricmc.networking.impl.networking.AbstractNetworkAddon;
 import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
 import net.fabricmc.networking.mixin.accessor.LoginQueryResponseC2SPacketAccessor;
 import net.fabricmc.networking.mixin.accessor.ServerLoginNetworkHandlerAccessor;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.PacketCallbacks;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket;
+import net.minecraft.network.packet.s2c.login.LoginCompressionS2CPacket;
+import net.minecraft.network.packet.s2c.login.LoginQueryRequestS2CPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerLoginNetworkHandler;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLoginNetworking.LoginQueryResponseHandler> implements PacketSender {
 	private final ClientConnection connection;
@@ -64,6 +58,8 @@ public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLo
 		this.handler = handler;
 		this.server = ((ServerLoginNetworkHandlerAccessor) handler).getServer();
 		this.queryIdFactory = QueryIdFactory.create();
+		// FFAPI: Add offset to avoid conflicts with FML
+		this.queryIdFactory.set(999);
 
 		ServerLoginConnectionEvents.INIT.invoker().onLoginInit(handler, this.server);
 		this.receiver.startSession(this);
@@ -188,6 +184,7 @@ public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLo
 	}
 
 	public void registerOutgoingPacket(LoginQueryRequestS2CPacket packet) {
+		if (ServerNetworkingImpl.LOGIN.getHandler(packet.getChannel()) == null) return;
 		this.channels.put(packet.getQueryId(), packet.getChannel());
 	}
 
