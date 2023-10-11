@@ -16,16 +16,14 @@
 
 package net.fabricmc.networking.mixin;
 
+import net.fabricmc.networking.impl.networking.server.ServerNetworkingImpl;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-
-import net.fabricmc.networking.impl.networking.server.ServerNetworkingImpl;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {

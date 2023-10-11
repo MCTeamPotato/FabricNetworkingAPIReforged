@@ -16,10 +16,10 @@
 
 package net.fabricmc.networking.api.networking.v1;
 
-import java.util.function.Function;
-
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+
+import java.util.function.Function;
 
 /**
  * A type of packet. An instance of this should be created per a {@link FabricPacket} implementation.

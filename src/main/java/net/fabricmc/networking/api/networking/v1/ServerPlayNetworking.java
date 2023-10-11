@@ -16,21 +16,19 @@
 
 package net.fabricmc.networking.api.networking.v1;
 
-import java.util.Objects;
-import java.util.Set;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.packet.Packet;
+import net.fabricmc.networking.impl.networking.server.ServerNetworkingImpl;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.thread.ThreadExecutor;
+import org.jetbrains.annotations.Nullable;
 
-import net.fabricmc.networking.impl.networking.server.ServerNetworkingImpl;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Offers access to play stage server-side networking functionalities.

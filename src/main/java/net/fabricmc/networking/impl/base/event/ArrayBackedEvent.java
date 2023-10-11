@@ -16,19 +16,13 @@
 
 package net.fabricmc.networking.impl.base.event;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.networking.api.event.Event;
 import net.fabricmc.networking.impl.base.toposort.NodeSorting;
+import net.minecraft.util.Identifier;
+
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.function.Function;
 
 class ArrayBackedEvent<T> extends Event<T> {
 	private final Function<T[], T> invokerFactory;

@@ -16,12 +16,11 @@
 
 package net.fabricmc.networking.api.client.networking.v1;
 
+import net.fabricmc.networking.api.event.Event;
+import net.fabricmc.networking.api.event.EventFactory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientLoginNetworkHandler;
 import net.minecraft.util.Identifier;
-
-import net.fabricmc.networking.api.event.Event;
-import net.fabricmc.networking.api.event.EventFactory;
 
 /**
  * Offers access to events related to the connection to a server on the client while the server is processing the client's login request.

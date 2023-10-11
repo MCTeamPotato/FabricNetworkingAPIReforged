@@ -16,12 +16,11 @@
 
 package net.fabricmc.networking.impl.base.event;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
+import net.fabricmc.networking.impl.base.toposort.SortableNode;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.networking.impl.base.toposort.SortableNode;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 /**
  * Data of an {@link ArrayBackedEvent} phase.

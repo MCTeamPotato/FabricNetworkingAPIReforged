@@ -16,18 +16,16 @@
 
 package net.fabricmc.networking.mixin;
 
+import net.fabricmc.networking.api.networking.v1.EntityTrackingEvents;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.network.EntityTrackerEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.server.network.EntityTrackerEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-
-import net.fabricmc.networking.api.networking.v1.EntityTrackingEvents;
 
 @Mixin(EntityTrackerEntry.class)
 public abstract class EntityTrackerEntryMixin {
