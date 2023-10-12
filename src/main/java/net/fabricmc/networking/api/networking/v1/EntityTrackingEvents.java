@@ -16,11 +16,10 @@
 
 package net.fabricmc.networking.api.networking.v1;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.server.network.ServerPlayerEntity;
-
 import net.fabricmc.networking.api.event.Event;
 import net.fabricmc.networking.api.event.EventFactory;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * Events related to a tracking entities within a player's view distance.

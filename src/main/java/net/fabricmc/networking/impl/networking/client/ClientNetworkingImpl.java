@@ -16,26 +16,6 @@
 
 package net.fabricmc.networking.impl.networking.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.network.ClientLoginNetworkHandler;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ServerPlayPacketListener;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.networking.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayNetworking;
@@ -46,6 +26,24 @@ import net.fabricmc.networking.impl.networking.NetworkHandlerExtensions;
 import net.fabricmc.networking.impl.networking.NetworkingImpl;
 import net.fabricmc.networking.mixin.client.accessor.ConnectScreenAccessor;
 import net.fabricmc.networking.mixin.client.accessor.MinecraftClientAccessor;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.network.ClientLoginNetworkHandler;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ServerPlayPacketListener;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientNetworkingImpl {
