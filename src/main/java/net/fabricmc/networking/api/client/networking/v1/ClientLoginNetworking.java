@@ -26,6 +26,8 @@ import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -40,6 +42,7 @@ import java.util.function.Consumer;
  * @see ClientPlayNetworking
  * @see ServerLoginNetworking
  */
+@OnlyIn(Dist.CLIENT)
 public final class ClientLoginNetworking {
 	/**
 	 * Registers a handler to a query request channel.
@@ -136,6 +139,7 @@ public final class ClientLoginNetworking {
 	private ClientLoginNetworking() {
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@FunctionalInterface
 	public interface LoginQueryRequestHandler {
 		/**

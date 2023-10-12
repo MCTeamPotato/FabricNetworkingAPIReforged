@@ -16,17 +16,19 @@
 
 package net.fabricmc.networking.api.networking.v1;
 
+import java.util.Objects;
+
 import io.netty.channel.ChannelFutureListener;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.PacketCallbacks;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.PacketCallbacks;
+import net.minecraft.util.Identifier;
+
+import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
 
 /**
  * Represents something that supports sending packets to channels.
@@ -50,16 +52,6 @@ public interface PacketSender {
 
 	/**
 	 * Sends a packet.
-	 * @param packet the packet
-	 */
-	default <T extends FabricPacket> void sendPacket(T packet) {
-		PacketByteBuf buf = PacketByteBufs.create();
-		packet.write(buf);
-		sendPacket(packet.getType().getId(), buf);
-	}
-
-	/**
-	 * Sends a packet.
 	 *
 	 * @param packet the packet
 	 * @param callback an optional callback to execute after the packet is sent, may be {@code null}. The callback may also accept a {@link ChannelFutureListener}.
@@ -72,31 +64,7 @@ public interface PacketSender {
 	 * @param packet the packet
 	 * @param callback an optional callback to execute after the packet is sent, may be {@code null}. The callback may also accept a {@link ChannelFutureListener}.
 	 */
-	default <T extends FabricPacket> void sendPacket(T packet, @Nullable GenericFutureListener<? extends Future<? super Void>> callback) {
-		PacketByteBuf buf = PacketByteBufs.create();
-		packet.write(buf);
-		sendPacket(packet.getType().getId(), buf, callback);
-	}
-
-	/**
-	 * Sends a packet.
-	 *
-	 * @param packet the packet
-	 * @param callback an optional callback to execute after the packet is sent, may be {@code null}. The callback may also accept a {@link ChannelFutureListener}.
-	 */
 	void sendPacket(Packet<?> packet, @Nullable PacketCallbacks callback);
-
-	/**
-	 * Sends a packet.
-	 *
-	 * @param packet the packet
-	 * @param callback an optional callback to execute after the packet is sent, may be {@code null}. The callback may also accept a {@link ChannelFutureListener}.
-	 */
-	default <T extends FabricPacket> void sendPacket(T packet, @Nullable PacketCallbacks callback) {
-		PacketByteBuf buf = PacketByteBufs.create();
-		packet.write(buf);
-		sendPacket(packet.getType().getId(), buf, callback);
-	}
 
 	/**
 	 * Sends a packet to a channel.

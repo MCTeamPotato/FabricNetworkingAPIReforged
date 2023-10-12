@@ -20,7 +20,7 @@ import net.fabricmc.networking.impl.networking.DisconnectPacketSource;
 import net.fabricmc.networking.impl.networking.NetworkHandlerExtensions;
 import net.fabricmc.networking.impl.networking.PacketCallbackListener;
 import net.fabricmc.networking.impl.networking.server.ServerLoginNetworkAddon;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket;
 import net.minecraft.network.packet.s2c.login.LoginDisconnectS2CPacket;
 import net.minecraft.network.packet.s2c.login.LoginQueryRequestS2CPacket;
@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLoginNetworkHandler.class)
-public abstract class ServerLoginNetworkHandlerMixin implements NetworkHandlerExtensions, DisconnectPacketSource, PacketCallbackListener {
+abstract class ServerLoginNetworkHandlerMixin implements NetworkHandlerExtensions, DisconnectPacketSource, PacketCallbackListener {
 	@Shadow
 	public abstract void acceptPlayer();
 

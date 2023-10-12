@@ -26,9 +26,9 @@ import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
 import net.fabricmc.networking.mixin.accessor.LoginQueryResponseC2SPacketAccessor;
 import net.fabricmc.networking.mixin.accessor.ServerLoginNetworkHandlerAccessor;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.PacketCallbacks;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket;
 import net.minecraft.network.packet.s2c.login.LoginCompressionS2CPacket;
 import net.minecraft.network.packet.s2c.login.LoginQueryRequestS2CPacket;
@@ -54,7 +54,7 @@ public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLo
 
 	public ServerLoginNetworkAddon(ServerLoginNetworkHandler handler) {
 		super(ServerNetworkingImpl.LOGIN, "ServerLoginNetworkAddon for " + handler.getConnectionInfo());
-		this.connection = ((ServerLoginNetworkHandlerAccessor) handler).getConnection();
+		this.connection = handler.connection;
 		this.handler = handler;
 		this.server = ((ServerLoginNetworkHandlerAccessor) handler).getServer();
 		this.queryIdFactory = QueryIdFactory.create();
@@ -160,8 +160,7 @@ public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLo
 	public Packet<?> createPacket(Identifier channelName, PacketByteBuf buf) {
 		int queryId = this.queryIdFactory.nextId();
 
-		LoginQueryRequestS2CPacket ret = new LoginQueryRequestS2CPacket(queryId, channelName, buf);
-		return ret;
+        return new LoginQueryRequestS2CPacket(queryId, channelName, buf);
 	}
 
 	@Override

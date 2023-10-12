@@ -20,8 +20,6 @@ import net.fabricmc.networking.api.networking.v1.PacketByteBufs;
 import net.fabricmc.networking.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.networking.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.networking.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.networking.mixin.accessor.ServerLoginNetworkHandlerAccessor;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -77,8 +75,7 @@ public final class NetworkingImpl {
 				ids.add(buf.readIdentifier());
 			}
 
-			ClientConnection connection = ((ServerLoginNetworkHandlerAccessor) handler).getConnection();
-			((ChannelInfoHolder) connection).getPendingChannelsNames().addAll(ids);
+			((ChannelInfoHolder) handler.getConnection()).getPendingChannelsNames().addAll(ids);
 			NetworkingImpl.LOGGER.debug("Received accepted channels from the client for \"{}\"", handler.getConnectionInfo());
 		});
 	}

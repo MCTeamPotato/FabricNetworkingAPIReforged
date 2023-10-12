@@ -16,15 +16,24 @@
 
 package net.fabricmc.networking.impl.base.event;
 
-import net.fabricmc.networking.api.event.Event;
-import net.fabricmc.networking.impl.base.toposort.NodeSorting;
-import net.minecraft.util.Identifier;
-
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
+import net.minecraft.util.Identifier;
+
+import net.fabricmc.networking.api.event.Event;
+
 class ArrayBackedEvent<T> extends Event<T> {
+	static final Logger LOGGER = LoggerFactory.getLogger("fabric-api-base");
+
 	private final Function<T[], T> invokerFactory;
 	private final Object lock = new Object();
 	private T[] handlers;
@@ -73,7 +82,7 @@ class ArrayBackedEvent<T> extends Event<T> {
 			sortedPhases.add(phase);
 
 			if (sortIfCreate) {
-				NodeSorting.sort(sortedPhases, "event phases", Comparator.comparing(data -> data.id));
+				PhaseSorting.sortPhases(sortedPhases);
 			}
 		}
 
@@ -112,8 +121,9 @@ class ArrayBackedEvent<T> extends Event<T> {
 		synchronized (lock) {
 			EventPhaseData<T> first = getOrCreatePhase(firstPhase, false);
 			EventPhaseData<T> second = getOrCreatePhase(secondPhase, false);
-			EventPhaseData.link(first, second);
-			NodeSorting.sort(this.sortedPhases, "event phases", Comparator.comparing(data -> data.id));
+			first.subsequentPhases.add(second);
+			second.previousPhases.add(first);
+			PhaseSorting.sortPhases(this.sortedPhases);
 			rebuildInvoker(handlers.length);
 		}
 	}

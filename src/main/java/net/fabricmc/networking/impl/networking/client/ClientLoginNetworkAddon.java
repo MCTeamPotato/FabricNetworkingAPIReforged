@@ -16,28 +16,32 @@
 
 package net.fabricmc.networking.impl.networking.client;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import net.fabricmc.networking.api.client.networking.v1.ClientLoginConnectionEvents;
-import net.fabricmc.networking.api.client.networking.v1.ClientLoginNetworking;
-import net.fabricmc.networking.api.networking.v1.FutureListeners;
-import net.fabricmc.networking.api.networking.v1.PacketByteBufs;
-import net.fabricmc.networking.impl.networking.AbstractNetworkAddon;
-import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
-import net.fabricmc.networking.mixin.client.accessor.ClientLoginNetworkHandlerAccessor;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientLoginNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket;
 import net.minecraft.network.packet.s2c.login.LoginQueryRequestS2CPacket;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.networking.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.networking.api.client.networking.v1.ClientLoginNetworking;
+import net.fabricmc.networking.api.networking.v1.FutureListeners;
+import net.fabricmc.networking.api.networking.v1.PacketByteBufs;
+import net.fabricmc.networking.impl.networking.AbstractNetworkAddon;
+import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
 
+@Environment(EnvType.CLIENT)
 public final class ClientLoginNetworkAddon extends AbstractNetworkAddon<ClientLoginNetworking.LoginQueryRequestHandler> {
 	private final ClientLoginNetworkHandler handler;
 	private final MinecraftClient client;
@@ -88,7 +92,7 @@ public final class ClientLoginNetworkAddon extends AbstractNetworkAddon<ClientLo
 					listener = FutureListeners.union(listener, each);
 				}
 
-				((ClientLoginNetworkHandlerAccessor) this.handler).getConnection().send(packet, GenericFutureListenerHolder.create(listener));
+				this.handler.getConnection().send(packet, GenericFutureListenerHolder.create(listener));
 			});
 		} catch (Throwable ex) {
 			this.logger.error("Encountered exception while handling in channel with name \"{}\"", channelName, ex);

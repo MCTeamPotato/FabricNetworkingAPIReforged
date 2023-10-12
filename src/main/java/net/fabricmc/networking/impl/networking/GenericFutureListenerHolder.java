@@ -16,14 +16,15 @@
 
 package net.fabricmc.networking.impl.networking;
 
+import java.util.Objects;
+
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketCallbacks;
-import net.minecraft.network.packet.Packet;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketCallbacks;
 
 /**
  * We still need to support {@link GenericFutureListener} so we use this disguise impl {@link PacketCallbacks}

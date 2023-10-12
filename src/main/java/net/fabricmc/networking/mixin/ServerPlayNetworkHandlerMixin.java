@@ -19,8 +19,7 @@ package net.fabricmc.networking.mixin;
 import net.fabricmc.networking.impl.networking.DisconnectPacketSource;
 import net.fabricmc.networking.impl.networking.NetworkHandlerExtensions;
 import net.fabricmc.networking.impl.networking.server.ServerPlayNetworkAddon;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 import net.minecraft.server.MinecraftServer;
@@ -36,13 +35,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // We want to apply a bit earlier than other mods which may not use us in order to prevent refCount issues
 @Mixin(value = ServerPlayNetworkHandler.class, priority = 999)
-public abstract class ServerPlayNetworkHandlerMixin implements NetworkHandlerExtensions, DisconnectPacketSource {
+abstract class ServerPlayNetworkHandlerMixin implements NetworkHandlerExtensions, DisconnectPacketSource {
 	@Shadow
 	@Final
 	private MinecraftServer server;
-	@Shadow
-	@Final
-	public ClientConnection connection;
 
 	@Unique
 	private ServerPlayNetworkAddon fabricNetworkingAPIReforged$addon;

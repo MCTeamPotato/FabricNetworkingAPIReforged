@@ -25,16 +25,19 @@ import net.fabricmc.networking.impl.networking.ChannelInfoHolder;
 import net.fabricmc.networking.impl.networking.NetworkingImpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@OnlyIn(Dist.CLIENT)
 public final class ClientPlayNetworkAddon extends AbstractChanneledNetworkAddon<ClientPlayNetworking.PlayChannelHandler> {
 	private final ClientPlayNetworkHandler handler;
 	private final MinecraftClient client;
@@ -82,6 +85,11 @@ public final class ClientPlayNetworkAddon extends AbstractChanneledNetworkAddon<
 	 * @return true if the packet has been handled
 	 */
 	public boolean handle(CustomPayloadS2CPacket packet) {
+		// Do not handle the packet on game thread
+		if (this.client.isOnThread()) {
+			return false;
+		}
+
 		PacketByteBuf buf = packet.getData();
 
 		try {

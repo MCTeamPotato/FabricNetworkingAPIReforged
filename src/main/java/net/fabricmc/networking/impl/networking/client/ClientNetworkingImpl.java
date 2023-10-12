@@ -16,7 +16,26 @@
 
 package net.fabricmc.networking.impl.networking.client;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.network.ClientLoginNetworkHandler;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ServerPlayPacketListener;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.util.Identifier;
+
 import net.fabricmc.networking.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayNetworking;
@@ -25,25 +44,10 @@ import net.fabricmc.networking.impl.networking.ChannelInfoHolder;
 import net.fabricmc.networking.impl.networking.GlobalReceiverRegistry;
 import net.fabricmc.networking.impl.networking.NetworkHandlerExtensions;
 import net.fabricmc.networking.impl.networking.NetworkingImpl;
-import net.fabricmc.networking.mixin.client.accessor.ClientLoginNetworkHandlerAccessor;
 import net.fabricmc.networking.mixin.client.accessor.ConnectScreenAccessor;
 import net.fabricmc.networking.mixin.client.accessor.MinecraftClientAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.network.ClientLoginNetworkHandler;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ServerPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
+@OnlyIn(Dist.CLIENT)
 public final class ClientNetworkingImpl {
 	public static final GlobalReceiverRegistry<ClientLoginNetworking.LoginQueryRequestHandler> LOGIN = new GlobalReceiverRegistry<>();
 	public static final GlobalReceiverRegistry<ClientPlayNetworking.PlayChannelHandler> PLAY = new GlobalReceiverRegistry<>();
@@ -107,19 +111,20 @@ public final class ClientNetworkingImpl {
 
 	public static void clientInit() {
 		// Reference cleanup for the locally stored addon if we are disconnected
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> currentPlayAddon = null);
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			currentPlayAddon = null;
+		});
 
 		// Register a login query handler for early channel registration.
 		ClientLoginNetworking.registerGlobalReceiver(NetworkingImpl.EARLY_REGISTRATION_CHANNEL, (client, handler, buf, listenerAdder) -> {
 			int n = buf.readVarInt();
-			List<Identifier> ids = new ObjectArrayList<>(n);
+			List<Identifier> ids = new ArrayList<>(n);
 
 			for (int i = 0; i < n; i++) {
 				ids.add(buf.readIdentifier());
 			}
 
-			ClientConnection connection = ((ClientLoginNetworkHandlerAccessor) handler).getConnection();
-			((ChannelInfoHolder) connection).getPendingChannelsNames().addAll(ids);
+			((ChannelInfoHolder) handler.getConnection()).getPendingChannelsNames().addAll(ids);
 			NetworkingImpl.LOGGER.debug("Received accepted channels from the server");
 
 			PacketByteBuf response = PacketByteBufs.create();

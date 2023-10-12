@@ -16,6 +16,17 @@
 
 package net.fabricmc.networking.impl.networking.server;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.util.Identifier;
+
 import net.fabricmc.networking.api.networking.v1.S2CPlayChannelEvents;
 import net.fabricmc.networking.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.networking.api.networking.v1.ServerPlayNetworking;
@@ -23,17 +34,6 @@ import net.fabricmc.networking.impl.networking.AbstractChanneledNetworkAddon;
 import net.fabricmc.networking.impl.networking.ChannelInfoHolder;
 import net.fabricmc.networking.impl.networking.NetworkingImpl;
 import net.fabricmc.networking.mixin.accessor.CustomPayloadC2SPacketAccessor;
-import net.fabricmc.networking.mixin.accessor.ServerPlayNetworkHandlerAccessor;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.util.Identifier;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 public final class ServerPlayNetworkAddon extends AbstractChanneledNetworkAddon<ServerPlayNetworking.PlayChannelHandler> {
 	private final ServerPlayNetworkHandler handler;
@@ -41,7 +41,7 @@ public final class ServerPlayNetworkAddon extends AbstractChanneledNetworkAddon<
 	private boolean sentInitialRegisterPacket;
 
 	public ServerPlayNetworkAddon(ServerPlayNetworkHandler handler, MinecraftServer server) {
-		super(ServerNetworkingImpl.PLAY, ((ServerPlayNetworkHandlerAccessor) handler).getConnection(), "ServerPlayNetworkAddon for " + handler.player.getEntityName());
+		super(ServerNetworkingImpl.PLAY, handler.getConnection(), "ServerPlayNetworkAddon for " + handler.player.getEntityName());
 		this.handler = handler;
 		this.server = server;
 
@@ -75,6 +75,11 @@ public final class ServerPlayNetworkAddon extends AbstractChanneledNetworkAddon<
 	 * @return true if the packet has been handled
 	 */
 	public boolean handle(CustomPayloadC2SPacket packet) {
+		// Do not handle the packet on game thread
+		if (this.server.isOnThread()) {
+			return false;
+		}
+
 		CustomPayloadC2SPacketAccessor access = (CustomPayloadC2SPacketAccessor) packet;
 		return this.handle(access.getChannel(), access.getData());
 	}

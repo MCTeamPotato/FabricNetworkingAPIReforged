@@ -22,12 +22,15 @@ import net.fabricmc.networking.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 /**
  * Offers access to events related to the indication of a connected server's ability to receive packets in certain channels.
  */
+@OnlyIn(Dist.CLIENT)
 public final class C2SPlayChannelEvents {
 	/**
 	 * An event for the client play network handler receiving an update indicating the connected server's ability to receive packets in certain channels.
@@ -55,6 +58,7 @@ public final class C2SPlayChannelEvents {
 	/**
 	 * @see C2SPlayChannelEvents#REGISTER
 	 */
+	@OnlyIn(Dist.CLIENT)
 	@FunctionalInterface
 	public interface Register {
 		void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client, List<Identifier> channels);
@@ -63,6 +67,7 @@ public final class C2SPlayChannelEvents {
 	/**
 	 * @see C2SPlayChannelEvents#UNREGISTER
 	 */
+	@OnlyIn(Dist.CLIENT)
 	@FunctionalInterface
 	public interface Unregister {
 		void onChannelUnregister(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client, List<Identifier> channels);
