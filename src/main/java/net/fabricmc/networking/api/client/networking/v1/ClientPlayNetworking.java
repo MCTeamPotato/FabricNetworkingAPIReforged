@@ -24,7 +24,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -182,13 +181,13 @@ public final class ClientPlayNetworking {
 	}
 
 	/**
-	 * Creates a packet which may be sent to the connected server.
+	 * Creates a packet which may be sent to a the connected server.
 	 *
 	 * @param channelName the channel name
 	 * @param buf the packet byte buf which represents the payload of the packet
 	 * @return a new packet
 	 */
-	public static Packet<ServerPlayPacketListener> createC2SPacket(Identifier channelName, PacketByteBuf buf) {
+	public static Packet<?> createC2SPacket(Identifier channelName, PacketByteBuf buf) {
 		Objects.requireNonNull(channelName, "Channel name cannot be null");
 		Objects.requireNonNull(buf, "Buf cannot be null");
 

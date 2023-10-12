@@ -23,7 +23,6 @@ import net.fabricmc.networking.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.networking.api.networking.v1.FutureListeners;
 import net.fabricmc.networking.api.networking.v1.PacketByteBufs;
 import net.fabricmc.networking.impl.networking.AbstractNetworkAddon;
-import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientLoginNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -90,7 +89,7 @@ public final class ClientLoginNetworkAddon extends AbstractNetworkAddon<ClientLo
 					listener = FutureListeners.union(listener, each);
 				}
 
-				this.handler.getConnection().send(packet, GenericFutureListenerHolder.create(listener));
+				this.handler.getConnection().send(packet, listener);
 			});
 		} catch (Throwable ex) {
 			this.logger.error("Encountered exception while handling in channel with name \"{}\"", channelName, ex);

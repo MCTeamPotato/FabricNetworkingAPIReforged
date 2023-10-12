@@ -16,6 +16,7 @@
 
 package net.fabricmc.networking.api.networking.v1;
 
+import net.fabricmc.networking.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.networking.impl.networking.server.ServerNetworkingImpl;
 import net.fabricmc.networking.mixin.accessor.ServerLoginNetworkHandlerAccessor;
 import net.minecraft.network.PacketByteBuf;
@@ -34,6 +35,7 @@ import java.util.concurrent.Future;
  * <p>Server-side networking functionalities include receiving serverbound query responses and sending clientbound query requests.
  *
  * @see ServerPlayNetworking
+ * @see ClientLoginNetworking
  */
 public final class ServerLoginNetworking {
 	/**
@@ -147,7 +149,7 @@ public final class ServerLoginNetworking {
 	}
 
 	/**
-	 * Allows blocking client log-in until all futures passed into {@link LoginSynchronizer#waitFor(Future)} are completed.
+	 * Allows blocking client log-in until all all futures passed into {@link LoginSynchronizer#waitFor(Future)} are completed.
 	 *
 	 * @apiNote this interface is not intended to be implemented by users of api.
 	 */
@@ -166,7 +168,7 @@ public final class ServerLoginNetworking {
 		 * <pre>{@code
 		 * ServerLoginNetworking.registerGlobalReceiver(CHECK_CHANNEL, (server, handler, understood, buf, synchronizer, responseSender) -&gt; {
 		 * 	if (!understood) {
-		 * 		handler.disconnect(Text.literal("Only accept clients that can check!"));
+		 * 		handler.disconnect(new LiteralText("Only accept clients that can check!"));
 		 * 		return;
 		 * 	}
 		 *
@@ -177,7 +179,7 @@ public final class ServerLoginNetworking {
 		 * 		LoginInfoChecker checker = LoginInfoChecker.get(server);
 		 *
 		 * 		if (!checker.check(handler.getConnectionInfo(), checkMessage)) {
-		 * 			handler.disconnect(Text.literal("Invalid credentials!"));
+		 * 			handler.disconnect(new LiteralText("Invalid credentials!"));
 		 * 			return;
 		 * 		}
 		 *

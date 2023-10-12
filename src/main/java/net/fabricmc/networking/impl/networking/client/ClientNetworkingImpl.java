@@ -33,11 +33,12 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -59,7 +60,8 @@ public final class ClientNetworkingImpl {
 		return (ClientLoginNetworkAddon) ((NetworkHandlerExtensions) handler).fabricNetworkingAPIReforged$getAddon();
 	}
 
-	public static Packet<ServerPlayPacketListener> createPlayC2SPacket(Identifier channelName, PacketByteBuf buf) {
+	@Contract(value = "_, _ -> new", pure = true)
+	public static @NotNull Packet<?> createPlayC2SPacket(Identifier channelName, PacketByteBuf buf) {
 		return new CustomPayloadC2SPacket(channelName, buf);
 	}
 
@@ -91,7 +93,7 @@ public final class ClientNetworkingImpl {
 		// If the client's player is set this will work
 		if (MinecraftClient.getInstance().getNetworkHandler() != null) {
 			currentPlayAddon = null; // Shouldn't need this anymore
-			return getAddon(MinecraftClient.getInstance().getNetworkHandler());
+			return ClientNetworkingImpl.getAddon(MinecraftClient.getInstance().getNetworkHandler());
 		}
 
 		// We haven't hit the end of onGameJoin yet, use our backing field here to access the network handler
@@ -122,7 +124,7 @@ public final class ClientNetworkingImpl {
 				ids.add(buf.readIdentifier());
 			}
 
-			((ChannelInfoHolder) handler.getConnection()).getPendingChannelsNames().addAll(ids);
+			((ChannelInfoHolder) handler.getConnection()).fabricNetworkingAPIReforged$getPendingChannelsNames().addAll(ids);
 			NetworkingImpl.LOGGER.debug("Received accepted channels from the server");
 
 			PacketByteBuf response = PacketByteBufs.create();

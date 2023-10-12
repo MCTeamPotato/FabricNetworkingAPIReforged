@@ -16,7 +16,6 @@
 
 package net.fabricmc.networking.impl.networking.client;
 
-import com.mojang.logging.LogUtils;
 import net.fabricmc.networking.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.networking.api.client.networking.v1.ClientPlayNetworking;
@@ -31,7 +30,6 @@ import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,8 +40,6 @@ public final class ClientPlayNetworkAddon extends AbstractChanneledNetworkAddon<
 	private final ClientPlayNetworkHandler handler;
 	private final MinecraftClient client;
 	private boolean sentInitialRegisterPacket;
-
-	private static final Logger LOGGER = LogUtils.getLogger();
 
 	public ClientPlayNetworkAddon(ClientPlayNetworkHandler handler, MinecraftClient client) {
 		super(ClientNetworkingImpl.PLAY, handler.getConnection(), "ClientPlayNetworkAddon for " + (handler.getProfile() != null ? handler.getProfile().getName() : "(unknown)"));
@@ -67,11 +63,7 @@ public final class ClientPlayNetworkAddon extends AbstractChanneledNetworkAddon<
 	}
 
 	public void onServerReady() {
-		try {
-			ClientPlayConnectionEvents.JOIN.invoker().onPlayReady(this.handler, this, this.client);
-		} catch (RuntimeException e) {
-			LOGGER.error("Exception thrown while invoking ClientPlayConnectionEvents.JOIN", e);
-		}
+		ClientPlayConnectionEvents.JOIN.invoker().onPlayReady(this.handler, this, this.client);
 
 		// The client cannot send any packets, including `minecraft:register` until after GameJoinS2CPacket is received.
 		this.sendInitialChannelRegistrationPacket();

@@ -16,10 +16,10 @@
 
 package net.fabricmc.networking.api.networking.v1;
 
+import net.fabricmc.networking.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.networking.impl.networking.server.ServerNetworkingImpl;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,6 +37,7 @@ import java.util.Set;
  * <p>This class should be only used for the logical server.
  *
  * @see ServerLoginNetworking
+ * @see ClientPlayNetworking
  */
 public final class ServerPlayNetworking {
 	/**
@@ -157,7 +158,7 @@ public final class ServerPlayNetworking {
 	}
 
 	/**
-	 * Gets all channel names that a connected client declared the ability to receive a packets on.
+	 * Gets all channel names that a the connected client declared the ability to receive a packets on.
 	 *
 	 * @param handler the network handler
 	 * @return True if the connected client has declared the ability to receive a packet on the specified channel
@@ -196,13 +197,13 @@ public final class ServerPlayNetworking {
 	}
 
 	/**
-	 * Creates a packet which may be sent to a connected client.
+	 * Creates a packet which may be sent to a the connected client.
 	 *
 	 * @param channelName the channel name
 	 * @param buf the packet byte buf which represents the payload of the packet
 	 * @return a new packet
 	 */
-	public static Packet<ClientPlayPacketListener> createS2CPacket(Identifier channelName, PacketByteBuf buf) {
+	public static Packet<?> createS2CPacket(Identifier channelName, PacketByteBuf buf) {
 		Objects.requireNonNull(channelName, "Channel cannot be null");
 		Objects.requireNonNull(buf, "Buf cannot be null");
 

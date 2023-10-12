@@ -22,13 +22,11 @@ import net.fabricmc.networking.api.networking.v1.PacketSender;
 import net.fabricmc.networking.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.networking.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.networking.impl.networking.AbstractNetworkAddon;
-import net.fabricmc.networking.impl.networking.GenericFutureListenerHolder;
 import net.fabricmc.networking.mixin.accessor.LoginQueryResponseC2SPacketAccessor;
 import net.fabricmc.networking.mixin.accessor.ServerLoginNetworkHandlerAccessor;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket;
 import net.minecraft.network.packet.s2c.login.LoginCompressionS2CPacket;
 import net.minecraft.network.packet.s2c.login.LoginQueryRequestS2CPacket;
@@ -111,8 +109,8 @@ public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLo
 	private void sendCompressionPacket() {
 		// Compression is not needed for local transport
 		if (this.server.getNetworkCompressionThreshold() >= 0 && !this.connection.isLocal()) {
-			this.connection.send(new LoginCompressionS2CPacket(this.server.getNetworkCompressionThreshold()),
-					PacketCallbacks.always(() -> connection.setCompressionThreshold(server.getNetworkCompressionThreshold(), true))
+			this.connection.send(new LoginCompressionS2CPacket(this.server.getNetworkCompressionThreshold()), (channelFuture) ->
+					this.connection.setCompressionThreshold(this.server.getNetworkCompressionThreshold(), true)
 			);
 		}
 	}
@@ -171,12 +169,7 @@ public final class ServerLoginNetworkAddon extends AbstractNetworkAddon<ServerLo
 	}
 
 	@Override
-	public void sendPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends io.netty.util.concurrent.Future<? super Void>> callback) {
-		sendPacket(packet, GenericFutureListenerHolder.create(callback));
-	}
-
-	@Override
-	public void sendPacket(Packet<?> packet, PacketCallbacks callback) {
+	public void sendPacket(Packet<?> packet, GenericFutureListener<? extends io.netty.util.concurrent.Future<? super Void>> callback) {
 		Objects.requireNonNull(packet, "Packet cannot be null");
 
 		this.connection.send(packet, callback);

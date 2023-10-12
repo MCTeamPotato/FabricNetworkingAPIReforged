@@ -22,6 +22,7 @@ import net.fabricmc.networking.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.networking.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,12 +76,12 @@ public final class NetworkingImpl {
 				ids.add(buf.readIdentifier());
 			}
 
-			((ChannelInfoHolder) handler.getConnection()).getPendingChannelsNames().addAll(ids);
+			((ChannelInfoHolder) handler.getConnection()).fabricNetworkingAPIReforged$getPendingChannelsNames().addAll(ids);
 			NetworkingImpl.LOGGER.debug("Received accepted channels from the client for \"{}\"", handler.getConnectionInfo());
 		});
 	}
 
-	public static boolean isReservedPlayChannel(Identifier channelName) {
+	public static boolean isReservedPlayChannel(@NotNull Identifier channelName) {
 		return channelName.equals(REGISTER_CHANNEL) || channelName.equals(UNREGISTER_CHANNEL);
 	}
 }

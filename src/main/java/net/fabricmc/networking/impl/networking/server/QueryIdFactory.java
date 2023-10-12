@@ -40,6 +40,6 @@ interface QueryIdFactory {
 
 	// called async prob.
 	int nextId();
-	// FFAPI: Setter to set initial offset
+
 	void set(int id);
 }

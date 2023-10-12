@@ -24,7 +24,6 @@ import net.fabricmc.networking.api.networking.v1.PacketSender;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.PacketCallbacks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +57,7 @@ public abstract class AbstractChanneledNetworkAddon<H> extends AbstractNetworkAd
 	public abstract void lateInit();
 
 	protected void registerPendingChannels(ChannelInfoHolder holder) {
-		final Collection<Identifier> pending = holder.getPendingChannelsNames();
+		final Collection<Identifier> pending = holder.fabricNetworkingAPIReforged$getPendingChannelsNames();
 
 		if (!pending.isEmpty()) {
 			register(new ArrayList<>(pending));
@@ -169,12 +168,7 @@ public abstract class AbstractChanneledNetworkAddon<H> extends AbstractNetworkAd
 	}
 
 	@Override
-	public void sendPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> callback) {
-		sendPacket(packet, GenericFutureListenerHolder.create(callback));
-	}
-
-	@Override
-	public void sendPacket(Packet<?> packet, PacketCallbacks callback) {
+	public void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> callback) {
 		Objects.requireNonNull(packet, "Packet cannot be null");
 
 		this.connection.send(packet, callback);
